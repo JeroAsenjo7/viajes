@@ -93,3 +93,5 @@ EMAIL_HOST_USER = os.environ.get('EMAIL_HOST_USER', 'pao.valija.magica1@gmail.co
 EMAIL_HOST_PASSWORD = os.environ.get('EMAIL_HOST_PASSWORD', 'ncuy oqbp kxwr vjsb')
 DEFAULT_FROM_EMAIL = EMAIL_HOST_USER
 EMAIL_DESTINO = os.environ.get('EMAIL_DESTINO', 'pao.valija.magica1@gmail.com')
+
+CSRF_TRUSTED_ORIGINS = os.environ.get('CSRF_TRUSTED_ORIGINS', '').split(',')
