@@ -1,0 +1,844 @@
+{% load static %}
+<!DOCTYPE html>
+<html lang="es">
+
+<head>
+  <meta charset="UTF-8" />
+  <meta name="viewport" content="width=device-width, initial-scale=1.0" />
+  <title>Paola Ripa — Agente Oficial Disney & Universal</title>
+  <link href="https://cdn.jsdelivr.net/npm/bootstrap@5.3.3/dist/css/bootstrap.min.css" rel="stylesheet" />
+  <link href="https://fonts.googleapis.com/css2?family=Poppins:wght@300;400;500;600;700;800;900&display=swap"
+    rel="stylesheet" />
+  <link href="https://cdn.jsdelivr.net/npm/bootstrap-icons@1.11.3/font/bootstrap-icons.css" rel="stylesheet" />
+  <link rel="icon" type="image/jpeg" href="{% static 'img/logo.jpeg' %}">
+  <style>
+    :root {
+      --az: #00537c;
+      --ro: #e35149;
+      --do: #FFD700;
+    }
+
+    * {
+      font-family: 'Poppins', sans-serif;
+    }
+
+    html {
+      scroll-behavior: smooth;
+    }
+
+    /* ── NAV ── */
+    .nav-min {
+      background: #fff;
+      border-bottom: 1px solid #e9ecef;
+      position: sticky;
+      top: 0;
+      z-index: 999;
+      padding: 14px 0;
+    }
+
+    .nav-brand {
+      font-weight: 800;
+      font-size: 13px;
+      letter-spacing: 2px;
+      color: var(--az) !important;
+      text-transform: uppercase;
+      text-decoration: none;
+    }
+
+    .nav-links a {
+      font-size: 13px;
+      font-weight: 500;
+      color: #555;
+      text-decoration: none;
+      padding: 6px 12px;
+      border-radius: 50px;
+      transition: color 0.2s;
+    }
+
+    .nav-links a:hover {
+      color: var(--az);
+    }
+
+    .btn-nav-cta {
+      background: var(--ro) !important;
+      color: #fff !important;
+      font-size: 12px !important;
+      font-weight: 600 !important;
+      padding: 8px 22px !important;
+      border-radius: 50px !important;
+      letter-spacing: 0.4px;
+      transition: opacity 0.2s;
+    }
+
+    .btn-nav-cta:hover {
+      opacity: 0.88;
+    }
+
+    /* ── HERO ── */
+    .hero {
+      padding: 90px 0 80px;
+      background: #fff;
+    }
+
+    .hero-badge {
+      display: inline-block;
+      background: var(--az);
+      color: var(--do);
+      font-size: 10px;
+      font-weight: 700;
+      letter-spacing: 2px;
+      text-transform: uppercase;
+      padding: 6px 16px;
+      border-radius: 50px;
+      margin-bottom: 20px;
+    }
+
+    .hero h1 {
+      font-size: clamp(1.9rem, 4.5vw, 2.8rem);
+      font-weight: 800;
+      line-height: 1.2;
+      color: #0a0a0a;
+    }
+
+    .hero h1 .accent {
+      color: var(--az);
+    }
+
+    .hero .sub {
+      font-size: 14px;
+      color: #666;
+      line-height: 1.85;
+      font-weight: 300;
+      max-width: 420px;
+    }
+
+    .btn-cta {
+      background: var(--ro);
+      color: #fff;
+      font-weight: 600;
+      font-size: 13px;
+      padding: 13px 32px;
+      border-radius: 50px;
+      border: none;
+      text-decoration: none;
+      display: inline-block;
+      transition: transform 0.2s, opacity 0.2s;
+    }
+
+    .btn-cta:hover {
+      transform: translateY(-2px);
+      opacity: 0.92;
+      color: #fff;
+    }
+
+    .btn-outline-az {
+      border: 1.5px solid var(--az);
+      color: var(--az);
+      font-weight: 600;
+      font-size: 13px;
+      padding: 12px 28px;
+      border-radius: 50px;
+      text-decoration: none;
+      display: inline-block;
+      transition: background 0.2s, color 0.2s;
+    }
+
+    .btn-outline-az:hover {
+      background: var(--az);
+      color: #fff;
+    }
+
+    /* Foto placeholder */
+    .foto-circle {
+      width: 200px;
+      height: 200px;
+      border-radius: 50%;
+      border: 2px dashed #c0d8e6;
+      background: #f0f7fb;
+      display: flex;
+      flex-direction: column;
+      align-items: center;
+      justify-content: center;
+      color: #a0c4d4;
+      font-size: 12px;
+      margin: 0 auto 28px;
+    }
+
+    /* Mini stats */
+    .mini-stat-num {
+      font-size: 22px;
+      font-weight: 800;
+      color: var(--az);
+      line-height: 1;
+    }
+
+    .mini-stat-lbl {
+      font-size: 11px;
+      color: #999;
+      margin-top: 3px;
+    }
+
+    /* ── BENEFICIOS ── */
+    .sec-ben {
+      padding: 80px 0;
+      background: #f8fafb;
+    }
+
+    .sec-title {
+      font-size: clamp(1.3rem, 3vw, 1.7rem);
+      font-weight: 800;
+      color: #0a0a0a;
+    }
+
+    .sec-title .ro {
+      color: var(--ro);
+    }
+
+    .gold-bar {
+      display: block;
+      width: 40px;
+      height: 3px;
+      background: var(--do);
+      border-radius: 2px;
+      margin: 12px auto 0;
+    }
+
+    .ben-card {
+      background: #fff;
+      border-radius: 14px;
+      padding: 28px 22px;
+      border: 1px solid #e9ecef;
+      border-top: 3px solid var(--do);
+      height: 100%;
+      transition: transform 0.2s;
+    }
+
+    .ben-card:hover {
+      transform: translateY(-4px);
+    }
+
+    .ben-icon {
+      font-size: 22px;
+      color: var(--az);
+      margin-bottom: 12px;
+      display: block;
+    }
+
+    .ben-card h5 {
+      font-size: 14px;
+      font-weight: 700;
+      color: #1a1a1a;
+      margin-bottom: 8px;
+    }
+
+    .ben-card p {
+      font-size: 12px;
+      color: #777;
+      line-height: 1.7;
+      margin: 0;
+    }
+
+    /* ── STATS ── */
+    .sec-stats {
+      padding: 80px 0;
+      background: var(--az);
+      color: #fff;
+    }
+
+    .sec-stats .sec-title {
+      color: #fff;
+    }
+
+    .sec-stats .ro {
+      color: var(--do);
+    }
+
+    .stat-card {
+      border: 1px solid rgba(255, 255, 255, 0.12);
+      border-radius: 14px;
+      padding: 28px 16px;
+      text-align: center;
+      background: rgba(255, 255, 255, 0.04);
+    }
+
+    .stat-num {
+      font-size: clamp(2rem, 4vw, 2.6rem);
+      font-weight: 900;
+      color: var(--do);
+      line-height: 1;
+    }
+
+    .stat-icon {
+      font-size: 20px;
+      color: var(--do);
+      margin-bottom: 10px;
+      display: block;
+    }
+
+    .stat-lbl {
+      font-size: 12px;
+      opacity: 0.75;
+      margin-top: 8px;
+      line-height: 1.5;
+    }
+
+    .info-pill {
+      display: inline-block;
+      background: rgba(255, 215, 0, 0.1);
+      border: 1px solid rgba(255, 215, 0, 0.25);
+      border-radius: 10px;
+      padding: 12px 22px;
+      font-size: 12px;
+      color: rgba(255, 255, 255, 0.85);
+      margin-top: 36px;
+    }
+
+    /* ── GALERÍA ── */
+    .sec-gal {
+      padding: 80px 0;
+      background: #fff;
+    }
+
+    .img-ph {
+      width: 100%;
+      aspect-ratio: 4/3;
+      background: #f0f7fb;
+      border-radius: 14px;
+      border: 1.5px dashed #bcd8e6;
+      display: flex;
+      flex-direction: column;
+      align-items: center;
+      justify-content: center;
+      color: #9dc4d4;
+      font-size: 12px;
+    }
+
+    .img-ph i {
+      font-size: 22px;
+      margin-bottom: 6px;
+    }
+
+    /* ── INSTAGRAM ── */
+    .sec-ig {
+      padding: 64px 0;
+      background: var(--ro);
+      text-align: center;
+      color: #fff;
+    }
+
+    .ig-handle {
+      font-size: clamp(1.3rem, 4vw, 1.9rem);
+      font-weight: 800;
+      letter-spacing: 1px;
+    }
+
+    .btn-ig {
+      background: var(--do);
+      color: #0a0a0a;
+      font-weight: 700;
+      font-size: 13px;
+      padding: 11px 28px;
+      border-radius: 50px;
+      text-decoration: none;
+      display: inline-block;
+      margin-top: 18px;
+      transition: transform 0.2s;
+    }
+
+    .btn-ig:hover {
+      transform: scale(1.05);
+      color: #0a0a0a;
+    }
+
+    /* ── RESERVAR ── */
+    .sec-form {
+      padding: 80px 0;
+      background: #f8fafb;
+    }
+
+    .form-ph {
+      background: #fff;
+      border: 1.5px dashed #bcd8e6;
+      border-radius: 14px;
+      padding: 48px;
+      text-align: center;
+      color: #9dc4d4;
+    }
+
+    .form-ph i {
+      font-size: 32px;
+      margin-bottom: 10px;
+      display: block;
+    }
+
+    /* ── FOOTER ── */
+    footer {
+      background: #0a1a22;
+      color: rgba(255, 255, 255, 0.4);
+      text-align: center;
+      padding: 20px;
+      font-size: 12px;
+    }
+
+    footer span {
+      color: var(--do);
+    }
+
+    /* responsive hero grid */
+    @media (max-width: 767px) {
+      .hero-grid {
+        flex-direction: column-reverse !important;
+      }
+    }
+
+
+    /*estilo foto de perfil*/
+    .foto-circle {
+      width: 300px;
+      height: 300px;
+      border-radius: 50%;
+      overflow: hidden;
+      /* 🔑 esto recorta la imagen */
+      display: flex;
+      align-items: center;
+      justify-content: center;
+      background: #eee;
+
+    }
+
+    .foto-perfil {
+      width: 100%;
+      height: 100%;
+      object-fit: cover;
+      /*  llena sin deformar */
+    }
+
+    .foto-circle {
+      border: 2px solid #ddd;
+    }
+
+    /* ── GALERÍA SCROLL MOBILE ── */
+    .gal-scroll {
+      display: flex;
+      overflow-x: auto;
+      gap: 12px;
+      padding-bottom: 12px;
+      scroll-snap-type: x mandatory;
+      -webkit-overflow-scrolling: touch;
+    }
+
+    .gal-scroll::-webkit-scrollbar {
+      display: none;
+    }
+
+    .gal-item {
+      flex: 0 0 78vw;
+      max-width: 300px;
+      aspect-ratio: 4/3;
+      scroll-snap-align: center;
+      border-radius: 14px;
+    }
+  </style>
+</head>
+
+<body>
+
+  <!-- ── NAV ── -->
+  <nav class="nav-min">
+    <div class="container d-flex justify-content-between align-items-center">
+      <a href="#inicio" class="nav-brand">Paovalijamagica</a>
+      <div class="nav-links d-none d-md-flex align-items-center gap-1">
+        <a href="#inicio">Inicio</a>
+        <a href="#beneficios">Beneficios</a>
+        <a href="#experiencia">Experiencia</a>
+        <a href="#galeria">Galería</a>
+        <a href="#reservar" class="btn-nav-cta ms-2">Reservar cita</a>
+      </div>
+      <a href="#reservar" class="btn-nav-cta d-md-none">Reservar</a>
+    </div>
+  </nav>
+
+  <!-- ── HERO ── -->
+  <section class="hero" id="inicio">
+    <div class="container">
+      <div class="d-flex align-items-center gap-5 hero-grid flex-wrap flex-md-nowrap">
+
+        <!-- texto -->
+        <div class="flex-grow-1">
+          <span class="hero-badge">Agente Oficial Disney &amp; Universal</span>
+          <h1>Soy <span class="accent">Paola Ripa</span>.<br />Tu viaje mágico<br />empieza aquí.</h1>
+          <p class="sub mt-3">Me encargo de cada detalle de la logística para que vos solo tengas que disfrutar cada
+            momento.</p>
+          <div class="d-flex flex-wrap gap-3 mt-4">
+            <a href="#reservar" class="btn-cta">Reservar mi cita</a>
+            <a href="#beneficios" class="btn-outline-az">Ver más</a>
+          </div>
+        </div>
+
+        <!-- foto + mini stats -->
+        <div class="text-center flex-shrink-0" style="min-width:220px">
+          <div class="foto-circle">
+            <img src="/static/img/foto-perfil.jpeg" alt="Mi foto" class="foto-perfil">
+          </div>
+          <div class="d-flex justify-content-center gap-4">
+            <div>
+              <div class="mini-stat-num">+1.500</div>
+              <div class="mini-stat-lbl">Pasajeros</div>
+            </div>
+            <div style="width:1px;background:#e5e5e5;"></div>
+            <div>
+              <div class="mini-stat-num">+20</div>
+              <div class="mini-stat-lbl">Países</div>
+            </div>
+            <div style="width:1px;background:#e5e5e5;"></div>
+            <div>
+              <div class="mini-stat-num">3</div>
+              <div class="mini-stat-lbl">Disney</div>
+            </div>
+          </div>
+        </div>
+
+      </div>
+    </div>
+  </section>
+
+  <!-- ── BENEFICIOS ── -->
+  <section class="sec-ben" id="beneficios">
+    <div class="container text-center">
+      <h2 class="sec-title">¿Por qué reservar con una <span class="ro">agente oficial</span>?</h2>
+      <span class="gold-bar"></span>
+      <p class="text-muted mt-3 mb-5" style="font-size:13px;">Todo lo que necesitás, sin costos extras.</p>
+      <div class="row g-4">
+        <div class="col-sm-6 col-lg-4">
+          <div class="ben-card">
+            <i class="bi bi-person-check-fill ben-icon"></i>
+            <h5>Asesoría personalizada</h5>
+            <p>Sin costos extras. Te guío en cada decisión para que elijas el viaje perfecto para vos y tu familia.</p>
+          </div>
+        </div>
+        <div class="col-sm-6 col-lg-4">
+          <div class="ben-card">
+            <i class="bi bi-arrow-repeat ben-icon"></i>
+            <h5>Seguimiento total</h5>
+            <p>Antes, durante y después del viaje. Estoy con vos en todo momento para lo que necesites.</p>
+          </div>
+        </div>
+        <div class="col-sm-6 col-lg-4">
+          <div class="ben-card">
+            <i class="bi bi-building ben-icon"></i>
+            <h5>Hoteles & parques</h5>
+            <p>Reservación completa y acceso a las mejores promociones y paquetes disponibles.</p>
+          </div>
+        </div>
+        <div class="col-sm-6 col-lg-4">
+          <div class="ben-card">
+            <i class="bi bi-currency-dollar ben-icon"></i>
+            <h5>Solo USD 200 para arrancar</h5>
+            <p>Reservás con solo 200 dólares y viajás cuando vos quieras, con tiempo para organizar tu presupuesto.</p>
+          </div>
+        </div>
+        <div class="col-sm-6 col-lg-4">
+          <div class="ben-card">
+            <i class="bi bi-bell-fill ben-icon"></i>
+            <h5>Alertas de promos</h5>
+            <p>Te aviso de cada promoción que salga para que no te pierdas ninguna oportunidad.</p>
+          </div>
+        </div>
+        <div class="col-sm-6 col-lg-4">
+          <div class="ben-card">
+            <i class="bi bi-map-fill ben-icon"></i>
+            <h5>Tips, filas rápidas & itinerario</h5>
+            <p>Todo planificado para que aproveches cada minuto en el parque sin estrés ni improvisación.</p>
+          </div>
+        </div>
+      </div>
+    </div>
+  </section>
+
+  <!-- ── EXPERIENCIA / STATS ── -->
+  <section class="sec-stats" id="experiencia">
+    <div class="container text-center">
+      <h2 class="sec-title">¿Por qué <span class="ro">contratarme</span>?</h2>
+      <span class="gold-bar"></span>
+      <p class="mt-3 mb-5" style="font-size:13px;opacity:0.75;">Experiencia real. Resultados mágicos.</p>
+      <div class="row g-4">
+        <div class="col-6 col-md-3">
+          <div class="stat-card">
+            <i class="bi bi-people-fill stat-icon"></i>
+            <div class="stat-num">+1.500</div>
+            <div class="stat-lbl">Pasajeros a diferentes destinos del mundo</div>
+          </div>
+        </div>
+        <div class="col-6 col-md-3">
+          <div class="stat-card">
+            <i class="bi bi-globe2 stat-icon"></i>
+            <div class="stat-num">+20</div>
+            <div class="stat-lbl">Países que conozco personalmente</div>
+          </div>
+        </div>
+        <div class="col-6 col-md-3">
+          <div class="stat-card">
+            <i class="bi bi-stars stat-icon"></i>
+            <div class="stat-num">3</div>
+            <div class="stat-lbl">Disney distintos alrededor del mundo</div>
+          </div>
+        </div>
+        <div class="col-6 col-md-3">
+          <div class="stat-card">
+            <i class="bi bi-patch-check-fill stat-icon"></i>
+            <div class="stat-num">100%</div>
+            <div class="stat-lbl">Formada por Disney y Universal directamente</div>
+          </div>
+        </div>
+      </div>
+      <div class="info-pill">
+        <i class="bi bi-award-fill me-2" style="color:var(--do);"></i>
+        Todos los años me actualizo y viajo a Disney para darte la mejor experiencia.
+      </div>
+    </div>
+  </section>
+
+  <!-- ── GALERÍA ── -->
+<section class="sec-gal" id="galeria">
+  <div class="container text-center">
+    <h2 class="sec-title">Galería <span class="ro">mágica</span></h2>
+    <span class="gold-bar"></span>
+    <p class="text-muted mt-3 mb-5" style="font-size:13px;">Algunos momentos especiales.</p>
+
+    <!-- GRID desktop -->
+    <div class="row g-3 d-none d-md-flex">
+      <div class="col-md-4"><img src="{% static 'img/img1.jpeg' %}" alt="Foto 1" style="width:100%;aspect-ratio:4/3;object-fit:cover;border-radius:14px;"></div>
+      <div class="col-md-4"><img src="{% static 'img/img2.jpeg' %}" alt="Foto 2" style="width:100%;aspect-ratio:4/3;object-fit:cover;border-radius:14px;"></div>
+      <div class="col-md-4"><img src="{% static 'img/img3.jpeg' %}" alt="Foto 3" style="width:100%;aspect-ratio:4/3;object-fit:cover;border-radius:14px;"></div>
+      <div class="col-md-4"><img src="{% static 'img/img4.jpeg' %}" alt="Foto 4" style="width:100%;aspect-ratio:4/3;object-fit:cover;border-radius:14px;"></div>
+      <div class="col-md-4"><img src="{% static 'img/img5.jpeg' %}" alt="Foto 5" style="width:100%;aspect-ratio:4/3;object-fit:cover;border-radius:14px;"></div>
+      <div class="col-md-4"><img src="{% static 'img/img6.jpeg' %}" alt="Foto 6" style="width:100%;aspect-ratio:4/3;object-fit:cover;border-radius:14px;"></div>
+    </div>
+
+    <!-- CARRUSEL mobile -->
+    <div class="d-md-none gal-scroll">
+      <img src="{% static 'img/img1.jpeg' %}" alt="Foto 1" class="gal-item" style="object-fit:cover;">
+      <img src="{% static 'img/img2.jpeg' %}" alt="Foto 2" class="gal-item" style="object-fit:cover;">
+      <img src="{% static 'img/img3.jpeg' %}" alt="Foto 3" class="gal-item" style="object-fit:cover;">
+      <img src="{% static 'img/img4.jpeg' %}" alt="Foto 4" class="gal-item" style="object-fit:cover;">
+      <img src="{% static 'img/img5.jpeg' %}" alt="Foto 5" class="gal-item" style="object-fit:cover;">
+      <img src="{% static 'img/img6.jpeg' %}" alt="Foto 6" class="gal-item" style="object-fit:cover;">
+    </div>
+
+  </div>
+</section>
+
+  <!-- ── INSTAGRAM ── -->
+  <section class="sec-ig">
+    <div class="container">
+      <p style="font-size:12px;opacity:0.8;margin-bottom:6px;">Seguime en Instagram</p>
+      <div class="ig-handle"><i class="bi bi-instagram me-2"></i>@PAOVALIJAMAGICA</div>
+      <br />
+      <a href="https://instagram.com/PAOVALIJAMAGICA" target="_blank" class="btn-ig">Ver perfil</a>
+    </div>
+  </section>
+
+  <section class="sec-form" id="reservar">
+    <div class="container">
+      <h2 class="sec-title text-center">Reservá tu <span class="ro">cita</span></h2>
+      <span class="gold-bar"></span>
+      <p class="text-muted text-center mt-3 mb-5" style="font-size:13px;">Completá el formulario y me comunico con vos a
+        la brevedad.</p>
+
+      <form method="POST" action="{% url 'inicio' %}" style="max-width:720px;margin:0 auto;">
+        {% csrf_token %}
+
+        <!-- CONTACTO -->
+        <div class="mb-4">
+          <h5
+            style="color:var(--az);font-weight:700;font-size:14px;border-bottom:2px solid var(--do);padding-bottom:6px;margin-bottom:18px;">
+            Información de contacto</h5>
+          <div class="row g-3">
+            <div class="col-md-6">
+              <label class="form-label fw-600" style="font-size:13px;">Nombre y apellido *</label>
+              {{ form.nombre_apellido }}
+            </div>
+            <div class="col-md-6">
+              <label class="form-label fw-600" style="font-size:13px;">WhatsApp / Teléfono *</label>
+              {{ form.whatsapp }}
+            </div>
+            <div class="col-md-6">
+              <label class="form-label fw-600" style="font-size:13px;">Correo electrónico *</label>
+              {{ form.email }}
+            </div>
+            <div class="col-md-6">
+              <label class="form-label fw-600" style="font-size:13px;">País y ciudad de residencia *</label>
+              {{ form.pais_ciudad }}
+            </div>
+            <div class="col-md-6">
+              <label class="form-label fw-600" style="font-size:13px;">¿Tenés visa o ciudadanía? *</label>
+              {{ form.tiene_visa }}
+            </div>
+          </div>
+        </div>
+
+        <!-- DESTINO -->
+        <div class="mb-4">
+          <h5
+            style="color:var(--az);font-weight:700;font-size:14px;border-bottom:2px solid var(--do);padding-bottom:6px;margin-bottom:18px;">
+            Definición del destino</h5>
+          <div class="row g-3">
+            <div class="col-md-6">
+              <label class="form-label fw-600" style="font-size:13px;">¿A dónde pensás viajar? *</label>
+              {{ form.destino }}
+            </div>
+            <div class="col-md-6">
+              <label class="form-label fw-600" style="font-size:13px;">Si elegiste "Otro", especificá</label>
+              {{ form.destino_otro }}
+            </div>
+            <div class="col-md-6">
+              <label class="form-label fw-600" style="font-size:13px;">¿Querés más de un destino?</label>
+              {{ form.multidestino }}
+            </div>
+            <div class="col-md-6">
+              <label class="form-label fw-600" style="font-size:13px;">Preferencia de hotel (Disney/Universal)</label>
+              {{ form.preferencia_hotel }}
+            </div>
+          </div>
+        </div>
+
+        <!-- FECHAS -->
+        <div class="mb-4">
+          <h5
+            style="color:var(--az);font-weight:700;font-size:14px;border-bottom:2px solid var(--do);padding-bottom:6px;margin-bottom:18px;">
+            Fechas y duración</h5>
+          <div class="row g-3">
+            <div class="col-md-4">
+              <label class="form-label fw-600" style="font-size:13px;">Fecha tentativa de salida *</label>
+              {{ form.fecha_salida }}
+            </div>
+            <div class="col-md-4">
+              <label class="form-label fw-600" style="font-size:13px;">¿Flexibilidad de fechas? *</label>
+              {{ form.flexibilidad_fechas }}
+            </div>
+            <div class="col-md-4">
+              <label class="form-label fw-600" style="font-size:13px;">Cantidad de noches *</label>
+              {{ form.cantidad_noches }}
+            </div>
+          </div>
+        </div>
+
+        <!-- GRUPO -->
+        <div class="mb-4">
+          <h5
+            style="color:var(--az);font-weight:700;font-size:14px;border-bottom:2px solid var(--do);padding-bottom:6px;margin-bottom:18px;">
+            Composición del grupo</h5>
+          <div class="row g-3">
+            <div class="col-md-4">
+              <label class="form-label fw-600" style="font-size:13px;">Adultos (18+) *</label>
+              {{ form.adultos }}
+            </div>
+            <div class="col-md-4">
+              <label class="form-label fw-600" style="font-size:13px;">Menores</label>
+              {{ form.menores }}
+            </div>
+            <div class="col-md-4">
+              <label class="form-label fw-600" style="font-size:13px;">Edades de los menores</label>
+              {{ form.edades_menores }}
+            </div>
+          </div>
+        </div>
+
+        <!-- LOGÍSTICA -->
+        <div class="mb-4">
+          <h5
+            style="color:var(--az);font-weight:700;font-size:14px;border-bottom:2px solid var(--do);padding-bottom:6px;margin-bottom:18px;">
+            Logística</h5>
+          <div class="row g-3">
+            <div class="col-md-6">
+              <div class="form-check">
+                {{ form.incluir_vuelos }}
+                <label class="form-check-label" style="font-size:13px;">¿Incluir vuelos en el presupuesto?</label>
+              </div>
+            </div>
+            <div class="col-md-6">
+              <div class="form-check">
+                {{ form.necesita_traslados }}
+                <label class="form-check-label" style="font-size:13px;">¿Necesitás auto o traslados privados?</label>
+              </div>
+            </div>
+          </div>
+        </div>
+
+        <!-- OPCIONALES -->
+        <div class="mb-4">
+          <h5
+            style="color:var(--az);font-weight:700;font-size:14px;border-bottom:2px solid var(--do);padding-bottom:6px;margin-bottom:6px;">
+            Opcionales</h5>
+          <p style="font-size:11px;color:#999;margin-bottom:14px;">No es obligatorio completar esta sección.</p>
+          <div class="row g-3">
+            <div class="col-md-6">
+              <label class="form-label fw-600" style="font-size:13px;">Días de parques en Orlando</label>
+              {{ form.dias_parques }}
+            </div>
+            <div class="col-md-6 d-flex align-items-center">
+              <div class="form-check mt-3">
+                {{ form.asesoria_visa }}
+                <label class="form-check-label" style="font-size:13px;">¿Necesitás asesoría de visa / ESTA /
+                  ETIAS?</label>
+              </div>
+            </div>
+          </div>
+        </div>
+
+        <!-- PRESUPUESTO -->
+        <div class="mb-4">
+          <h5
+            style="color:var(--az);font-weight:700;font-size:14px;border-bottom:2px solid var(--do);padding-bottom:6px;margin-bottom:18px;">
+            Presupuesto y observaciones</h5>
+          <div class="row g-3">
+            <div class="col-md-6">
+              <label class="form-label fw-600" style="font-size:13px;">Presupuesto estimado</label>
+              {{ form.presupuesto }}
+            </div>
+            <div class="col-12">
+              <label class="form-label fw-600" style="font-size:13px;">Contanos más sobre tu viaje ideal</label>
+              {{ form.observaciones }}
+            </div>
+          </div>
+        </div>
+
+        <!-- TURNO -->
+        <div class="mb-4">
+          <h5
+            style="color:var(--az);font-weight:700;font-size:14px;border-bottom:2px solid var(--do);padding-bottom:6px;margin-bottom:18px;">
+            Día y horario de la cita</h5>
+          <div class="row g-3">
+            <div class="col-12">
+              <label class="form-label fw-600" style="font-size:13px;">Seleccioná tu turno *</label>
+              {{ form.turno }}
+              {% if form.turno.errors %}
+              <div style="color:#e35149;font-size:12px;margin-top:6px;">
+                {{ form.turno.errors|join:", " }}
+              </div>
+              {% endif %}
+              <small style="color:#999;font-size:11px;margin-top:6px;display:block;">
+                Disponible Lunes a Jueves · 17:00 a 19:00hs · Turnos cada 30 minutos
+              </small>
+            </div>
+          </div>
+        </div>
+
+        <div class="text-center mt-4">
+          <button type="submit" class="btn-cta px-5">Enviar consulta</button>
+        </div>
+
+      </form>
+    </div>
+  </section>
+
+  <!-- ── FOOTER ── -->
+  <footer>
+    <p class="mb-0">© 2026 <span>Paola Ripa</span> · Agente Oficial Disney & Universal · Todos los derechos reservados.
+    </p>
+  </footer>
+
+  <script src="https://cdn.jsdelivr.net/npm/bootstrap@5.3.3/dist/js/bootstrap.bundle.min.js"></script>
+</body>
+
+</html>
