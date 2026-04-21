@@ -6,9 +6,9 @@ BASE_DIR = Path(__file__).resolve().parent.parent
 
 SECRET_KEY = os.environ.get('SECRET_KEY', 'django-insecure-8k5u=h)o9p*##2j=bbs&_+iczt=ynoxq86(yl2_f0dqp7#4g)_')
 
-DEBUG = os.environ.get('DEBUG', 'True') == 'True'
+DEBUG = os.environ.get('DEBUG', 'False') == 'True'
 
-ALLOWED_HOSTS = ['*']
+ALLOWED_HOSTS = ['.railway.app']
 
 INSTALLED_APPS = [
     'django.contrib.auth',
@@ -94,4 +94,9 @@ EMAIL_HOST_PASSWORD = os.environ.get('EMAIL_HOST_PASSWORD', 'ncuy oqbp kxwr vjsb
 DEFAULT_FROM_EMAIL = EMAIL_HOST_USER
 EMAIL_DESTINO = os.environ.get('EMAIL_DESTINO', 'pao.valija.magica1@gmail.com')
 
-CSRF_TRUSTED_ORIGINS = os.environ.get('CSRF_TRUSTED_ORIGINS', '').split(',')
+CSRF_TRUSTED_ORIGINS = [
+    'https://*.railway.app'
+]
+
+CSRF_COOKIE_SECURE = True
+SESSION_COOKIE_SECURE = True
