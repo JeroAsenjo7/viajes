@@ -6,6 +6,9 @@ from django.conf import settings
 from .forms import ConsultaForm
 from .models import Consulta
 
+import logging
+logger = logging.getLogger(__name__)
+
 
 # ── Formulario público ──────────────────────────────────────
 def consulta_view(request):
@@ -63,8 +66,8 @@ Observaciones:{consulta.observaciones or '—'}
                 recipient_list=[settings.EMAIL_DESTINO],
                 fail_silently=False,
             )
-        except Exception:
-            pass
+        except Exception as e:
+            logger.error(f"Error al enviar correo de consulta: {e}")
         try:
             send_mail(
                 subject='¡Tu consulta fue recibida! ✨ Paola Ripa - Agente Oficial Disney & Universal',
@@ -92,8 +95,8 @@ zAgente Oficial Disney & Universal ✨
                 recipient_list=[consulta.email],
                 fail_silently=False,
             )
-        except Exception:
-            pass
+        except Exception as e:
+            logger.error(f"Error al enviar correo de consulta: {e}")
             return redirect('consulta_exitosa')
     else:
         form = ConsultaForm()
