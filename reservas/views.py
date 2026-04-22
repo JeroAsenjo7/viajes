@@ -58,27 +58,29 @@ Asesoría visa: {'Sí' if consulta.asesoria_visa else 'No'}
 Presupuesto:  {consulta.presupuesto or '—'}
 Observaciones:{consulta.observaciones or '—'}
             """
-        try:
-            send_mail(
-                subject=f'Nueva consulta — {consulta.nombre_apellido} | Turno: {consulta.fecha_turno.strftime("%d/%m/%Y")} {consulta.hora_turno.strftime("%H:%M")}hs',
-                message=mensaje,
-                from_email=settings.DEFAULT_FROM_EMAIL,
-                recipient_list=[settings.EMAIL_DESTINO],
-                fail_silently=False,
-            )
-        except Exception as e:
-            logger.error(f"Error al enviar correo de consulta: {e}")
-        try:
-            send_mail(
-                subject='¡Tu consulta fue recibida! ✨ Paola Ripa - Agente Oficial Disney & Universal',
-                message=f"""
+
+            try:
+                send_mail(
+                    subject=f'Nueva consulta — {consulta.nombre_apellido} | Turno: {consulta.fecha_turno.strftime("%d/%m/%Y")} {consulta.hora_turno.strftime("%H:%M")}hs',
+                    message=mensaje,
+                    from_email=settings.DEFAULT_FROM_EMAIL,
+                    recipient_list=[settings.EMAIL_DESTINO],
+                    fail_silently=False,
+                )
+            except Exception as e:
+                logger.error(f"Error al enviar correo de consulta: {e}")
+
+            try:
+                send_mail(
+                    subject='¡Tu consulta fue recibida! ✨ Paola Ripa - Agente Oficial Disney & Universal',
+                    message=f"""
 Hola {consulta.nombre_apellido}!
 
 ¡Gracias por contactarme! Recibí tu consulta y estoy muy feliz de poder acompañarte en esta aventura mágica. 🎢✨
 
 Tu turno está confirmado para:
 
-📅 Día: {consulta.fecha_turno.strftime('%A %d/%m/%Y')}
+📅 Día: {DIAS_ES[consulta.fecha_turno.weekday()]} {consulta.fecha_turno.strftime('%d/%m/%Y')}
 🕐 Horario: {consulta.hora_turno.strftime('%H:%M')}hs
 
 En esa reunión vamos a repasar todos los detalles de tu viaje y armar el presupuesto ideal para vos.
@@ -89,14 +91,15 @@ Si necesitás reprogramar o tenés alguna consulta antes de la reunión, escribi
 
 ¡Nos vemos pronto!
 Paola Ripa
-zAgente Oficial Disney & Universal ✨
-                """,
-                from_email=settings.DEFAULT_FROM_EMAIL,
-                recipient_list=[consulta.email],
-                fail_silently=False,
-            )
-        except Exception as e:
-            logger.error(f"Error al enviar correo de consulta: {e}")
+Agente Oficial Disney & Universal ✨
+                    """,
+                    from_email=settings.DEFAULT_FROM_EMAIL,
+                    recipient_list=[consulta.email],
+                    fail_silently=False,
+                )
+            except Exception as e:
+                logger.error(f"Error al enviar correo al cliente: {e}")
+
             return redirect('consulta_exitosa')
     else:
         form = ConsultaForm()
