@@ -55,6 +55,7 @@ Asesoría visa: {'Sí' if consulta.asesoria_visa else 'No'}
 Presupuesto:  {consulta.presupuesto or '—'}
 Observaciones:{consulta.observaciones or '—'}
             """
+        try:
             send_mail(
                 subject=f'Nueva consulta — {consulta.nombre_apellido} | Turno: {consulta.fecha_turno.strftime("%d/%m/%Y")} {consulta.hora_turno.strftime("%H:%M")}hs',
                 message=mensaje,
@@ -62,6 +63,9 @@ Observaciones:{consulta.observaciones or '—'}
                 recipient_list=[settings.EMAIL_DESTINO],
                 fail_silently=False,
             )
+        except Exception:
+            pass
+        try:
             send_mail(
                 subject='¡Tu consulta fue recibida! ✨ Paola Ripa - Agente Oficial Disney & Universal',
                 message=f"""
@@ -88,6 +92,8 @@ zAgente Oficial Disney & Universal ✨
                 recipient_list=[consulta.email],
                 fail_silently=False,
             )
+        except Exception:
+            pass
             return redirect('consulta_exitosa')
     else:
         form = ConsultaForm()
