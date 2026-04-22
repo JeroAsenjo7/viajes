@@ -9,6 +9,11 @@ from .models import Consulta
 import logging
 logger = logging.getLogger(__name__)
 
+DIAS_ES = {
+    0: 'Lunes', 1: 'Martes', 2: 'Miércoles',
+    3: 'Jueves', 4: 'Viernes', 5: 'Sábado', 6: 'Domingo'
+}
+
 
 # ── Formulario público ──────────────────────────────────────
 def consulta_view(request):
