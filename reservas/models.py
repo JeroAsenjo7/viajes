@@ -60,7 +60,20 @@ class Consulta(models.Model):
     dias_parques = models.PositiveSmallIntegerField(null=True, blank=True, verbose_name="Días de parques en Orlando")
     asesoria_visa = models.BooleanField(default=False, verbose_name="¿Necesita asesoría de visa/ESTA/ETIAS?")
 
+
     # ── Presupuesto y observaciones
+    SERVICIO_CHOICES = [
+        ('cotizacion_paquete', 'Cotización de paquete completo'),
+        ('asesoramiento', 'Asesoramiento (ya tengo todo sacado)'),
+        ('reserva_alojamiento', 'Reserva de alojamiento'),
+        ('vuelos_vehiculos', 'Vuelos y vehículos'),
+        ('otro', 'Otro'),
+    ]
+    servicio = models.CharField(
+        max_length=30,
+        choices=SERVICIO_CHOICES,
+        verbose_name="Servicio que desea contratar"
+    )
     presupuesto = models.CharField(max_length=100, blank=True, verbose_name="Presupuesto estimado")
     observaciones = models.TextField(blank=True, verbose_name="Contanos más sobre tu viaje ideal")
 

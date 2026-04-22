@@ -87,6 +87,7 @@ class ConsultaForm(forms.ModelForm):
             'dias_parques':        forms.NumberInput(attrs={'class': 'form-control', 'min': 1}),
             'presupuesto':         forms.TextInput(attrs={'class': 'form-control', 'placeholder': 'Ej: USD 3000 - 5000'}),
             'observaciones':       forms.Textarea(attrs={'class': 'form-control', 'rows': 4, 'placeholder': 'Contanos todo lo que quieras...'}),
+            'servicio':            forms.Select(attrs={'class': 'form-select'}),
         }
  
     def __init__(self, *args, **kwargs):

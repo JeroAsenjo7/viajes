@@ -599,34 +599,40 @@
   </section>
 
   <!-- ── GALERÍA ── -->
-<section class="sec-gal" id="galeria">
-  <div class="container text-center">
-    <h2 class="sec-title">Galería <span class="ro">mágica</span></h2>
-    <span class="gold-bar"></span>
-    <p class="text-muted mt-3 mb-5" style="font-size:13px;">Algunos momentos especiales.</p>
+  <section class="sec-gal" id="galeria">
+    <div class="container text-center">
+      <h2 class="sec-title">Galería <span class="ro">mágica</span></h2>
+      <span class="gold-bar"></span>
+      <p class="text-muted mt-3 mb-5" style="font-size:13px;">Algunos momentos especiales.</p>
 
-    <!-- GRID desktop -->
-    <div class="row g-3 d-none d-md-flex">
-      <div class="col-md-4"><img src="{% static 'img/img1.jpeg' %}" alt="Foto 1" style="width:100%;aspect-ratio:4/3;object-fit:cover;border-radius:14px;"></div>
-      <div class="col-md-4"><img src="{% static 'img/img2.jpeg' %}" alt="Foto 2" style="width:100%;aspect-ratio:4/3;object-fit:cover;border-radius:14px;"></div>
-      <div class="col-md-4"><img src="{% static 'img/img3.jpeg' %}" alt="Foto 3" style="width:100%;aspect-ratio:4/3;object-fit:cover;border-radius:14px;"></div>
-      <div class="col-md-4"><img src="{% static 'img/img4.jpeg' %}" alt="Foto 4" style="width:100%;aspect-ratio:4/3;object-fit:cover;border-radius:14px;"></div>
-      <div class="col-md-4"><img src="{% static 'img/img5.jpeg' %}" alt="Foto 5" style="width:100%;aspect-ratio:4/3;object-fit:cover;border-radius:14px;"></div>
-      <div class="col-md-4"><img src="{% static 'img/img6.jpeg' %}" alt="Foto 6" style="width:100%;aspect-ratio:4/3;object-fit:cover;border-radius:14px;"></div>
+      <!-- GRID desktop -->
+      <div class="row g-3 d-none d-md-flex">
+        <div class="col-md-4"><img src="{% static 'img/img1.jpeg' %}" alt="Foto 1"
+            style="width:100%;aspect-ratio:4/3;object-fit:cover;border-radius:14px;"></div>
+        <div class="col-md-4"><img src="{% static 'img/img2.jpeg' %}" alt="Foto 2"
+            style="width:100%;aspect-ratio:4/3;object-fit:cover;border-radius:14px;"></div>
+        <div class="col-md-4"><img src="{% static 'img/img3.jpeg' %}" alt="Foto 3"
+            style="width:100%;aspect-ratio:4/3;object-fit:cover;border-radius:14px;"></div>
+        <div class="col-md-4"><img src="{% static 'img/img4.jpeg' %}" alt="Foto 4"
+            style="width:100%;aspect-ratio:4/3;object-fit:cover;border-radius:14px;"></div>
+        <div class="col-md-4"><img src="{% static 'img/img5.jpeg' %}" alt="Foto 5"
+            style="width:100%;aspect-ratio:4/3;object-fit:cover;border-radius:14px;"></div>
+        <div class="col-md-4"><img src="{% static 'img/img6.jpeg' %}" alt="Foto 6"
+            style="width:100%;aspect-ratio:4/3;object-fit:cover;border-radius:14px;"></div>
+      </div>
+
+      <!-- CARRUSEL mobile -->
+      <div class="d-md-none gal-scroll">
+        <img src="{% static 'img/img1.jpeg' %}" alt="Foto 1" class="gal-item" style="object-fit:cover;">
+        <img src="{% static 'img/img2.jpeg' %}" alt="Foto 2" class="gal-item" style="object-fit:cover;">
+        <img src="{% static 'img/img3.jpeg' %}" alt="Foto 3" class="gal-item" style="object-fit:cover;">
+        <img src="{% static 'img/img4.jpeg' %}" alt="Foto 4" class="gal-item" style="object-fit:cover;">
+        <img src="{% static 'img/img5.jpeg' %}" alt="Foto 5" class="gal-item" style="object-fit:cover;">
+        <img src="{% static 'img/img6.jpeg' %}" alt="Foto 6" class="gal-item" style="object-fit:cover;">
+      </div>
+
     </div>
-
-    <!-- CARRUSEL mobile -->
-    <div class="d-md-none gal-scroll">
-      <img src="{% static 'img/img1.jpeg' %}" alt="Foto 1" class="gal-item" style="object-fit:cover;">
-      <img src="{% static 'img/img2.jpeg' %}" alt="Foto 2" class="gal-item" style="object-fit:cover;">
-      <img src="{% static 'img/img3.jpeg' %}" alt="Foto 3" class="gal-item" style="object-fit:cover;">
-      <img src="{% static 'img/img4.jpeg' %}" alt="Foto 4" class="gal-item" style="object-fit:cover;">
-      <img src="{% static 'img/img5.jpeg' %}" alt="Foto 5" class="gal-item" style="object-fit:cover;">
-      <img src="{% static 'img/img6.jpeg' %}" alt="Foto 6" class="gal-item" style="object-fit:cover;">
-    </div>
-
-  </div>
-</section>
+  </section>
 
   <!-- ── INSTAGRAM ── -->
   <section class="sec-ig">
@@ -792,6 +798,15 @@
             style="color:var(--az);font-weight:700;font-size:14px;border-bottom:2px solid var(--do);padding-bottom:6px;margin-bottom:18px;">
             Presupuesto y observaciones</h5>
           <div class="row g-3">
+            <div class="col-12">
+              <label class="form-label fw-600" style="font-size:13px;">Servicio que deseas contratar *</label>
+              {{ form.servicio }}
+              {% if form.servicio.errors %}
+              <div style="color:#e35149;font-size:12px;margin-top:6px;">
+                {{ form.servicio.errors|join:", " }}
+              </div>
+              {% endif %}
+            </div>
             <div class="col-md-6">
               <label class="form-label fw-600" style="font-size:13px;">Presupuesto estimado</label>
               {{ form.presupuesto }}

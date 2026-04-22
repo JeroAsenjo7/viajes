@@ -59,6 +59,9 @@ Traslados:    {'Sí' if consulta.necesita_traslados else 'No'}
 Días parques: {consulta.dias_parques or '—'}
 Asesoría visa: {'Sí' if consulta.asesoria_visa else 'No'}
 
+── SERVICIO ──────────────────────
+Servicio:     {consulta.get_servicio_display()}
+
 ── PRESUPUESTO ───────────────────
 Presupuesto:  {consulta.presupuesto or '—'}
 Observaciones:{consulta.observaciones or '—'}
