@@ -73,7 +73,7 @@ Observaciones:{consulta.observaciones or '—'}
                     fail_silently=False,
                 )
             except Exception as e:
-                logger.error(f"Error al enviar correo de consulta: {e}")
+                print(f"Error al enviar correo al admin: {e}", flush=True)
 
             try:
                 send_mail(
@@ -103,7 +103,7 @@ Agente Oficial Disney & Universal ✨
                     fail_silently=False,
                 )
             except Exception as e:
-                logger.error(f"Error al enviar correo al cliente: {e}")
+                print(f"Error al enviar correo al cliente: {e}", flush=True)
 
             return redirect('consulta_exitosa')
     else:
