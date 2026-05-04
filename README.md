@@ -1,8 +1,4 @@
-# 🌟 Paovalijamagica — Sistema de Reservas de Viajes
 
-Sitio web y sistema de gestión de consultas para **Paola Ripa**, agente oficial de Disney & Universal.
-
----
 
 ## 🚀 Tecnologías
 
@@ -61,14 +57,6 @@ python manage.py createsuperuser
 # Iniciar servidor
 python manage.py runserver
 ```
-
----
-
-## 🔑 Variables de entorno
-
-Crear un archivo `.env` en la raíz con estas variables:
-
----
 
 ## 🚂 Deploy en Railway
 
