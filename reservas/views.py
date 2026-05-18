@@ -23,44 +23,109 @@ DIAS_ES = {
 }
 
 
-def enviar_emails(consulta, mensaje):
-    try:
-        import yagmail
-        yag = yagmail.SMTP(
-            user=os.environ.get('EMAIL_HOST_USER'),
-            password=os.environ.get('EMAIL_HOST_PASSWORD')
-        )
-        yag.send(
-            to=os.environ.get('EMAIL_DESTINO'),
-            subject=f'Nueva consulta — {consulta.nombre_apellido} | Turno: {consulta.fecha_turno.strftime("%d/%m/%Y")} {consulta.hora_turno.strftime("%H:%M")}hs',
-            contents=mensaje
-        )
-        yag.send(
-            to=consulta.email,
-            subject='Tu consulta fue recibida - Paola Ripa Agente Oficial Disney y Universal',
-            contents=f"""
+# ── Formulario público ──────────────────────────────────────
+def consulta_view(request):
+    if request.method == 'POST':
+        form = ConsultaForm(request.POST)
+        if form.is_valid():
+            consulta = form.save()
+            enviar_push(
+                titulo='Nueva consulta recibida',
+                mensaje=f'{consulta.nombre_apellido} agendó un turno para el {consulta.fecha_turno.strftime("%d/%m/%Y")} a las {consulta.hora_turno.strftime("%H:%M")}hs'
+            )
+            mensaje = f"""
+Nueva consulta recibida desde la web:
+
+── TURNO RESERVADO ───────────────
+Día:          {consulta.fecha_turno.strftime('%d/%m/%Y')}
+Horario:      {consulta.hora_turno.strftime('%H:%M')}hs
+
+── CONTACTO ──────────────────────
+Nombre:       {consulta.nombre_apellido}
+WhatsApp:     {consulta.whatsapp}
+Email:        {consulta.email}
+País/Ciudad:  {consulta.pais_ciudad}
+Visa:         {consulta.get_tiene_visa_display()}
+
+── DESTINO ───────────────────────
+Destino:      {consulta.get_destino_display()}
+Otro:         {consulta.destino_otro or '—'}
+Multidestino: {consulta.multidestino or '—'}
+Hotel:        {consulta.preferencia_hotel or '—'}
+
+── FECHAS ────────────────────────
+Salida:       {consulta.fecha_salida}
+Flexibilidad: {consulta.get_flexibilidad_fechas_display()}
+Noches:       {consulta.cantidad_noches}
+
+── GRUPO ─────────────────────────
+Adultos:      {consulta.adultos}
+Menores:      {consulta.menores}
+Edades:       {consulta.edades_menores or '—'}
+
+── LOGÍSTICA ─────────────────────
+Vuelos:       {'Sí' if consulta.incluir_vuelos else 'No'}
+Traslados:    {'Sí' if consulta.necesita_traslados else 'No'}
+
+── OPCIONALES ────────────────────
+Días parques: {consulta.dias_parques or '—'}
+Asesoría visa: {'Sí' if consulta.asesoria_visa else 'No'}
+
+── SERVICIO ──────────────────────
+Servicio:     {consulta.get_servicio_display()}
+
+── PRESUPUESTO ───────────────────
+Presupuesto:  {consulta.presupuesto or '—'}
+Observaciones:{consulta.observaciones or '—'}
+            """
+
+            try:
+                send_mail(
+                    subject=f'Nueva consulta — {consulta.nombre_apellido} | Turno: {consulta.fecha_turno.strftime("%d/%m/%Y")} {consulta.hora_turno.strftime("%H:%M")}hs',
+                    message=mensaje,
+                    from_email=settings.DEFAULT_FROM_EMAIL,
+                    recipient_list=[settings.EMAIL_DESTINO],
+                    fail_silently=False,
+                )
+            except Exception as e:
+                print(f"Error al enviar correo al admin: {e}", flush=True)
+
+            try:
+                send_mail(
+                    subject='¡Tu consulta fue recibida! ✨ Paola Ripa - Agente Oficial Disney & Universal',
+                    message=f"""
 Hola {consulta.nombre_apellido}!
 
-Gracias por contactarme! Recibi tu consulta y estoy muy feliz de poder acompañarte en esta aventura magica.
+¡Gracias por contactarme! Recibí tu consulta y estoy muy feliz de poder acompañarte en esta aventura mágica. 
 
-Tu turno esta confirmado para:
+Tu turno está confirmado para:
 
-Dia: {DIAS_ES[consulta.fecha_turno.weekday()]} {consulta.fecha_turno.strftime('%d/%m/%Y')}
-Horario: {consulta.hora_turno.strftime('%H:%M')}hs
+- Día: {DIAS_ES[consulta.fecha_turno.weekday()]} {consulta.fecha_turno.strftime('%d/%m/%Y')}
+- Horario: {consulta.hora_turno.strftime('%H:%M')}hs
 
-En esa reunion vamos a repasar todos los detalles de tu viaje y armar el presupuesto ideal para vos.
+En esa reunión vamos a repasar todos los detalles de tu viaje y armar el presupuesto ideal para vos.
 
-Si necesitas reprogramar escribime por Instagram o WhatsApp.
+Si necesitás reprogramar o tenés alguna consulta antes de la reunión, escribime por WhatsApp.
 
-Instagram: @PAOVALIJAMAGICA
-
-Nos vemos pronto!
+¡Nos vemos pronto!
 Paola Ripa
-Agente Oficial Disney y Universal
-            """
-        )
-    except Exception as e:
-        print(f"Error yagmail: {e}", flush=True)
+Agente Oficial Disney & Universal 
+                    """,
+                    from_email=settings.DEFAULT_FROM_EMAIL,
+                    recipient_list=[consulta.email],
+                    fail_silently=False,
+                )
+            except Exception as e:
+                print(f"Error al enviar correo al cliente: {e}", flush=True)
+
+            return redirect('consulta_exitosa')
+    else:
+        form = ConsultaForm()
+    return render(request, 'base.html', {'form': form})
+
+
+def consulta_exitosa(request):
+    return render(request, 'exito.html')
 
 
 # ── Formulario público ──────────────────────────────────────
