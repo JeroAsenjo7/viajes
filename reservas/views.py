@@ -259,6 +259,9 @@ def enviar_push(titulo, mensaje):
     print(f"Enviando push a {suscripciones.count()} suscripciones", flush=True)
     
     vapid_private_key = os.environ.get('VAPID_PRIVATE_KEY', '')
+    print(f"Clave VAPID presente: {bool(vapid_private_key)}", flush=True)
+    print(f"Primeros 20 chars: {vapid_private_key[:20]}", flush=True)
+    
     if not vapid_private_key:
         print("ERROR: VAPID_PRIVATE_KEY no configurada", flush=True)
         return
