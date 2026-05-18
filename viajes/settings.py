@@ -8,7 +8,7 @@ SECRET_KEY = os.environ.get('SECRET_KEY', 'django-insecure-8k5u=h)o9p*##2j=bbs&_
 
 DEBUG = os.environ.get('DEBUG', 'False') == 'True'
 
-ALLOWED_HOSTS = ['.railway.app', '127.0.0.1', 'localhost']
+ALLOWED_HOSTS = ['*']
 
 INSTALLED_APPS = [
     'django.contrib.auth',
@@ -94,4 +94,4 @@ EMAIL_DESTINO = os.environ.get('EMAIL_DESTINO', '')
 
 CSRF_COOKIE_SECURE = True
 SESSION_COOKIE_SECURE = True
-CSRF_TRUSTED_ORIGINS = os.environ.get('CSRF_TRUSTED_ORIGINS', 'https://paovalijamagica.com').split(',')
+CSRF_TRUSTED_ORIGINS = os.environ.get('CSRF_TRUSTED_ORIGINS', 'https://pao-valija-magica.com').split(',')
