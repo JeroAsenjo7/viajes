@@ -473,7 +473,7 @@
 
   <script>
     const VAPID_PUBLIC_KEY = 'BK6UdfL3ZjM6vdPfaEPEHb01LtV4fHlqfpTmJKlZghWtOn4YIfC4MOkE5Oe7gpkDHXuHo-fUKZdkCcFkCbP5iBc';
-    
+
     function urlBase64ToUint8Array(base64String) {
       const padding = '='.repeat((4 - base64String.length % 4) % 4);
       const base64 = (base64String + padding).replace(/\-/g, '+').replace(/_/g, '/');
@@ -486,20 +486,19 @@
     }
 
     async function activarNotificaciones() {
-      if (!('serviceWorker' in navigator) || !('PushManager' in window)) {
-        alert('Tu navegador no soporta notificaciones push.');
-        return;
-      }
+      if (!('serviceWorker' in navigator) || !('PushManager' in window)) return;
 
       const permiso = await Notification.requestPermission();
-      if (permiso !== 'granted') {
-        alert('Permiso de notificaciones denegado.');
-        return;
-      }
+      if (permiso !== 'granted') return;
 
       const registro = await navigator.serviceWorker.register('/sw.js');
       await navigator.serviceWorker.ready;
 
+      // Verificar si ya hay una suscripción activa
+      const suscripcionExistente = await registro.pushManager.getSubscription();
+      if (suscripcionExistente) return; // Ya está suscripto, no hacer nada
+
+      // Si no hay suscripción, crear una nueva
       const suscripcion = await registro.pushManager.subscribe({
         userVisibleOnly: true,
         applicationServerKey: urlBase64ToUint8Array(VAPID_PUBLIC_KEY)
@@ -510,11 +509,8 @@
         body: JSON.stringify(suscripcion),
         headers: { 'Content-Type': 'application/json' }
       });
-
-      alert('Notificaciones activadas correctamente.');
     }
 
-    // Activar automáticamente al cargar el panel
     window.addEventListener('load', activarNotificaciones);
   </script>
 </body>
