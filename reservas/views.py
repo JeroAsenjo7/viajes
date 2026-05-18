@@ -12,6 +12,8 @@ from django.views.decorators.csrf import csrf_exempt
 from pywebpush import webpush, WebPushException
 from .models import PushSubscription
 import logging
+from django.http import HttpResponse
+
 logger = logging.getLogger(__name__)
 
 DIAS_ES = {
@@ -273,3 +275,9 @@ def enviar_push(titulo, mensaje):
         except WebPushException as e:
             print(f"Error push: {e}", flush=True)
             sub.delete()
+
+def service_worker(request):
+    sw_path = os.path.join(settings.BASE_DIR, 'static', 'sw.js')
+    with open(sw_path, 'r') as f:
+        content = f.read()
+    return HttpResponse(content, content_type='application/javascript')

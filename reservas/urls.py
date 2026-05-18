@@ -15,4 +15,5 @@ urlpatterns = [
     path('panel/<int:pk>/etiqueta/', views.panel_etiqueta, name='panel_etiqueta'),
     #notificaciones del navegador
     path('push/suscribir/', views.guardar_suscripcion, name='guardar_suscripcion'),
+    path('sw.js', views.service_worker, name='service_worker'),
 ]

@@ -497,7 +497,7 @@
         return;
       }
 
-      const registro = await navigator.serviceWorker.register('/static/sw.js');
+      const registro = await navigator.serviceWorker.register('/sw.js');
       await navigator.serviceWorker.ready;
 
       const suscripcion = await registro.pushManager.subscribe({
