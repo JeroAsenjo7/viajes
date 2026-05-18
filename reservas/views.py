@@ -265,6 +265,7 @@ def enviar_push(titulo, mensaje):
 
     for sub in suscripciones:
         try:
+            print(f"Intentando enviar push...", flush=True)
             webpush(
                 subscription_info={
                     'endpoint': sub.endpoint,
@@ -279,10 +280,9 @@ def enviar_push(titulo, mensaje):
             )
             print(f"Push enviado OK", flush=True)
         except WebPushException as e:
-            print(f"Error push: {e}", flush=True)
-            sub.delete()
+            print(f"Error WebPush: {e.args}", flush=True)
         except Exception as e:
-            print(f"Error inesperado: {e}", flush=True)
+            print(f"Error general: {type(e).__name__}: {e}", flush=True)
 
 def service_worker(request):
     content = """
