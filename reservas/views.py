@@ -5,7 +5,12 @@ from django.core.mail import send_mail
 from django.conf import settings
 from .forms import ConsultaForm
 from .models import Consulta
-
+# notificaciones del navegador 
+import json
+from django.http import JsonResponse
+from django.views.decorators.csrf import csrf_exempt
+from pywebpush import webpush, WebPushException
+from .models import PushSubscription
 import logging
 logger = logging.getLogger(__name__)
 
@@ -21,6 +26,10 @@ def consulta_view(request):
         form = ConsultaForm(request.POST)
         if form.is_valid():
             consulta = form.save()
+            enviar_push(
+                titulo='Nueva consulta recibida',
+                mensaje=f'{consulta.nombre_apellido} agendó un turno para el {consulta.fecha_turno.strftime("%d/%m/%Y")} a las {consulta.hora_turno.strftime("%H:%M")}hs'
+            )
             mensaje = f"""
 Nueva consulta recibida desde la web:
 
@@ -226,3 +235,37 @@ def panel_etiqueta(request, pk):
         consulta.etiqueta = request.POST.get('etiqueta') or None
         consulta.save()
     return redirect(request.POST.get('next', 'panel'))
+
+@csrf_exempt
+def guardar_suscripcion(request):
+    if request.method == 'POST':
+        data = json.loads(request.body)
+        PushSubscription.objects.get_or_create(
+            endpoint=data['endpoint'],
+            defaults={
+                'p256dh': data['keys']['p256dh'],
+                'auth': data['keys']['auth'],
+            }
+        )
+        return JsonResponse({'ok': True})
+    return JsonResponse({'ok': False})
+
+
+def enviar_push(titulo, mensaje):
+    suscripciones = PushSubscription.objects.all()
+    for sub in suscripciones:
+        try:
+            webpush(
+                subscription_info={
+                    'endpoint': sub.endpoint,
+                    'keys': {
+                        'p256dh': sub.p256dh,
+                        'auth': sub.auth,
+                    }
+                },
+                data=json.dumps({'titulo': titulo, 'mensaje': mensaje}),
+                vapid_private_key='private_key.pem',
+                vapid_claims={'sub': 'mailto:pao.valija.magica1@gmail.com'}
+            )
+        except WebPushException:
+            sub.delete()

@@ -440,7 +440,8 @@
               <span class="etq etq-sin">Sin etiqueta</span>
               {% endif %}
             </div>
-            <div class="turno"><i class="bi bi-calendar-check me-1"></i>{{ c.fecha_turno|date:"d/m/Y" }} — {{c.hora_turno|time:"H:i" }}hs</div>
+            <div class="turno"><i class="bi bi-calendar-check me-1"></i>{{ c.fecha_turno|date:"d/m/Y" }} —
+              {{c.hora_turno|time:"H:i" }}hs</div>
             <form method="POST" action="{% url 'panel_etiqueta' c.pk %}" class="mt-2">
               {% csrf_token %}
               <input type="hidden" name="next" value="{{ request.get_full_path }}">
@@ -469,6 +470,53 @@
     </div>
 
   </div>
+
+  <script>
+    const VAPID_PUBLIC_KEY = 'MFkwEwYHKoZIzj0CAQYIKoZIzj0DAQcDQgAErpR18vdmMzq9099oQ8QdvTUu1Xh8eWp+lOYkqVmCFa06fhgh8Lgw6QTk57uCmQMde4ej59Qpl2QJwWQJs/mIFw==';
+
+    function urlBase64ToUint8Array(base64String) {
+      const padding = '='.repeat((4 - base64String.length % 4) % 4);
+      const base64 = (base64String + padding).replace(/\-/g, '+').replace(/_/g, '/');
+      const rawData = window.atob(base64);
+      const outputArray = new Uint8Array(rawData.length);
+      for (let i = 0; i < rawData.length; i++) {
+        outputArray[i] = rawData.charCodeAt(i);
+      }
+      return outputArray;
+    }
+
+    async function activarNotificaciones() {
+      if (!('serviceWorker' in navigator) || !('PushManager' in window)) {
+        alert('Tu navegador no soporta notificaciones push.');
+        return;
+      }
+
+      const permiso = await Notification.requestPermission();
+      if (permiso !== 'granted') {
+        alert('Permiso de notificaciones denegado.');
+        return;
+      }
+
+      const registro = await navigator.serviceWorker.register('/static/sw.js');
+      await navigator.serviceWorker.ready;
+
+      const suscripcion = await registro.pushManager.subscribe({
+        userVisibleOnly: true,
+        applicationServerKey: urlBase64ToUint8Array(VAPID_PUBLIC_KEY)
+      });
+
+      await fetch('/push/suscribir/', {
+        method: 'POST',
+        body: JSON.stringify(suscripcion),
+        headers: { 'Content-Type': 'application/json' }
+      });
+
+      alert('Notificaciones activadas correctamente.');
+    }
+
+    // Activar automáticamente al cargar el panel
+    window.addEventListener('load', activarNotificaciones);
+  </script>
 </body>
 
 </html>

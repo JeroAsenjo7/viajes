@@ -13,4 +13,6 @@ urlpatterns = [
     path('panel/<int:pk>/editar/', views.panel_editar, name='panel_editar'),
     path('panel/<int:pk>/borrar/', views.panel_borrar, name='panel_borrar'),
     path('panel/<int:pk>/etiqueta/', views.panel_etiqueta, name='panel_etiqueta'),
+    #notificaciones del navegador
+    path('push/suscribir/', views.guardar_suscripcion, name='guardar_suscripcion'),
 ]

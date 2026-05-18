@@ -110,3 +110,14 @@ class Consulta(models.Model):
 
     def __str__(self):
         return f"{self.nombre_apellido} — {self.get_destino_display()} ({self.creado_en:%d/%m/%Y})"
+    
+# --------- Notificaciones del navegador -------    
+
+class PushSubscription(models.Model):
+    endpoint = models.TextField(unique=True)
+    p256dh = models.TextField()
+    auth = models.TextField()
+    creado_en = models.DateTimeField(auto_now_add=True)
+
+    def __str__(self):
+        return self.endpoint[:50]
