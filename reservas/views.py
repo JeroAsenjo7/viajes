@@ -253,6 +253,7 @@ def guardar_suscripcion(request):
 
 def enviar_push(titulo, mensaje):
     suscripciones = PushSubscription.objects.all()
+    print(f"Enviando push a {suscripciones.count()} suscripciones", flush=True)
     for sub in suscripciones:
         try:
             webpush(
@@ -267,5 +268,7 @@ def enviar_push(titulo, mensaje):
                 vapid_private_key='private_key.pem',
                 vapid_claims={'sub': 'mailto:pao.valija.magica1@gmail.com'}
             )
-        except WebPushException:
+            print(f"Push enviado OK a {sub.endpoint[:40]}", flush=True)
+        except WebPushException as e:
+            print(f"Error push: {e}", flush=True)
             sub.delete()
