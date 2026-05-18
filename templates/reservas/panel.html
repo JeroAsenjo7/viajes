@@ -440,8 +440,7 @@
               <span class="etq etq-sin">Sin etiqueta</span>
               {% endif %}
             </div>
-            <div class="turno"><i class="bi bi-calendar-check me-1"></i>{{ c.fecha_turno|date:"d/m/Y" }} — {{
-              c.hora_turno|time:"H:i" }}hs</div>
+            <div class="turno"><i class="bi bi-calendar-check me-1"></i>{{ c.fecha_turno|date:"d/m/Y" }} — {{c.hora_turno|time:"H:i" }}hs</div>
             <form method="POST" action="{% url 'panel_etiqueta' c.pk %}" class="mt-2">
               {% csrf_token %}
               <input type="hidden" name="next" value="{{ request.get_full_path }}">
