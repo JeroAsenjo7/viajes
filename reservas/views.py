@@ -277,7 +277,9 @@ def enviar_push(titulo, mensaje):
             sub.delete()
 
 def service_worker(request):
-    sw_path = os.path.join(settings.BASE_DIR, 'static', 'sw.js')
+    sw_path = os.path.join(settings.BASE_DIR, 'staticfiles', 'sw.js')
+    if not os.path.exists(sw_path):
+        sw_path = os.path.join(settings.BASE_DIR, 'static', 'sw.js')
     with open(sw_path, 'r') as f:
         content = f.read()
     return HttpResponse(content, content_type='application/javascript')
