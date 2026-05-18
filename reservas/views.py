@@ -257,6 +257,12 @@ def guardar_suscripcion(request):
 def enviar_push(titulo, mensaje):
     suscripciones = PushSubscription.objects.all()
     print(f"Enviando push a {suscripciones.count()} suscripciones", flush=True)
+    
+    vapid_private_key = os.environ.get('VAPID_PRIVATE_KEY', '')
+    if not vapid_private_key:
+        print("ERROR: VAPID_PRIVATE_KEY no configurada", flush=True)
+        return
+
     for sub in suscripciones:
         try:
             webpush(
@@ -268,13 +274,15 @@ def enviar_push(titulo, mensaje):
                     }
                 },
                 data=json.dumps({'titulo': titulo, 'mensaje': mensaje}),
-                vapid_private_key='private_key.pem',
+                vapid_private_key=vapid_private_key,
                 vapid_claims={'sub': 'mailto:pao.valija.magica1@gmail.com'}
             )
-            print(f"Push enviado OK a {sub.endpoint[:40]}", flush=True)
+            print(f"Push enviado OK", flush=True)
         except WebPushException as e:
             print(f"Error push: {e}", flush=True)
             sub.delete()
+        except Exception as e:
+            print(f"Error inesperado: {e}", flush=True)
 
 def service_worker(request):
     content = """
