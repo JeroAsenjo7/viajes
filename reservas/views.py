@@ -239,6 +239,7 @@ def panel_etiqueta(request, pk):
 @csrf_exempt
 def guardar_suscripcion(request):
     if request.method == 'POST':
+        print("Suscripción recibida", flush=True)
         data = json.loads(request.body)
         PushSubscription.objects.get_or_create(
             endpoint=data['endpoint'],
