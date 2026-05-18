@@ -299,3 +299,23 @@ self.addEventListener('push', function(event) {
 });
 """
     return HttpResponse(content, content_type='application/javascript')
+
+# notificaciones iphone 
+def manifest(request):
+    import json
+    data = {
+        "name": "Paovalijamagica Panel",
+        "short_name": "Panel Pao",
+        "start_url": "/panel/",
+        "display": "standalone",
+        "background_color": "#f0f6ff",
+        "theme_color": "#00537c",
+        "icons": [
+            {
+                "src": "/static/img/logo.jpeg",
+                "sizes": "192x192",
+                "type": "image/jpeg"
+            }
+        ]
+    }
+    return HttpResponse(json.dumps(data), content_type='application/manifest+json')

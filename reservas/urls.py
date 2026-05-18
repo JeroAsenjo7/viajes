@@ -16,4 +16,6 @@ urlpatterns = [
     #notificaciones del navegador
     path('push/suscribir/', views.guardar_suscripcion, name='guardar_suscripcion'),
     path('sw.js', views.service_worker, name='service_worker'),
+    #notificaciones iphone
+    path('manifest.json', views.manifest, name='manifest'),
 ]
