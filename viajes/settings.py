@@ -95,3 +95,7 @@ EMAIL_DESTINO = os.environ.get('EMAIL_DESTINO', '')
 CSRF_COOKIE_SECURE = True
 SESSION_COOKIE_SECURE = True
 CSRF_TRUSTED_ORIGINS = os.environ.get('CSRF_TRUSTED_ORIGINS', 'https://pao-valija-magica.com').split(',')
+
+# Configuración de dominios para cookies por el cambio de dominio en producción
+SESSION_COOKIE_DOMAIN = os.environ.get('SESSION_COOKIE_DOMAIN', None)
+CSRF_COOKIE_DOMAIN = os.environ.get('CSRF_COOKIE_DOMAIN', None)
