@@ -1,9 +1,8 @@
 import os
+import resend
 from django.shortcuts import render, redirect, get_object_or_404
 from django.contrib.auth.decorators import login_required
 from django.contrib.auth import authenticate, login, logout
-from django.core.mail import send_mail
-from django.conf import settings
 from .forms import ConsultaForm
 from .models import Consulta
 import json
@@ -110,20 +109,23 @@ Observaciones:{consulta.observaciones or '—'}
             """
 
             try:
-                send_mail(
-                    subject=f'Nueva consulta — {consulta.nombre_apellido} | Turno: {consulta.fecha_turno.strftime("%d/%m/%Y")} {consulta.hora_turno.strftime("%H:%M")}hs',
-                    message=mensaje,
-                    from_email=settings.DEFAULT_FROM_EMAIL,
-                    recipient_list=[settings.EMAIL_DESTINO],
-                    fail_silently=False,
-                )
+                resend.api_key = os.environ.get('RESEND_API_KEY', '')
+                resend.Emails.send({
+                    'from': 'Paola Ripa <noreply@pao-valija-magica.com>',
+                    'to': [os.environ.get('EMAIL_DESTINO', '')],
+                    'subject': f'Nueva consulta — {consulta.nombre_apellido} | Turno: {consulta.fecha_turno.strftime("%d/%m/%Y")} {consulta.hora_turno.strftime("%H:%M")}hs',
+                    'text': mensaje,
+                })
             except Exception as e:
                 print(f"Error al enviar correo al admin: {e}", flush=True)
 
             try:
-                send_mail(
-                    subject='¡Tu consulta fue recibida! ✨ Paola Ripa - Agente Oficial Disney & Universal',
-                    message=f"""
+                resend.api_key = os.environ.get('RESEND_API_KEY', '')
+                resend.Emails.send({
+                    'from': 'Paola Ripa <noreply@pao-valija-magica.com>',
+                    'to': [consulta.email],
+                    'subject': '¡Tu consulta fue recibida! Paola Ripa - Agente Oficial Disney & Universal',
+                    'text': f"""
 Hola {consulta.nombre_apellido}!
 
 ¡Gracias por contactarme! Recibí tu consulta y estoy muy feliz de poder acompañarte en esta aventura mágica.
@@ -141,10 +143,7 @@ Si necesitás reprogramar o tenés alguna consulta antes de la reunión, escribi
 Paola Ripa
 Agente Oficial Disney & Universal
                     """,
-                    from_email=settings.DEFAULT_FROM_EMAIL,
-                    recipient_list=[consulta.email],
-                    fail_silently=False,
-                )
+                })
             except Exception as e:
                 print(f"Error al enviar correo al cliente: {e}", flush=True)
 
