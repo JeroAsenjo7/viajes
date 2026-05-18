@@ -94,4 +94,4 @@ EMAIL_DESTINO = os.environ.get('EMAIL_DESTINO', '')
 
 CSRF_COOKIE_SECURE = True
 SESSION_COOKIE_SECURE = True
-CSRF_TRUSTED_ORIGINS = os.environ.get('CSRF_TRUSTED_ORIGINS', 'https://pao-valija-magica.up.railway.app').split(',')
+CSRF_TRUSTED_ORIGINS = os.environ.get('CSRF_TRUSTED_ORIGINS', 'https://paovalijamagica.com').split(',')
