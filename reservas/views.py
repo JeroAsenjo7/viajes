@@ -6,14 +6,12 @@ from django.core.mail import send_mail
 from django.conf import settings
 from .forms import ConsultaForm
 from .models import Consulta
-# notificaciones del navegador 
 import json
-from django.http import JsonResponse
+from django.http import JsonResponse, HttpResponse
 from django.views.decorators.csrf import csrf_exempt
 from pywebpush import webpush, WebPushException
 from .models import PushSubscription
 import logging
-from django.http import HttpResponse
 
 logger = logging.getLogger(__name__)
 
@@ -23,16 +21,48 @@ DIAS_ES = {
 }
 
 
+def enviar_push(titulo, mensaje):
+    suscripciones = PushSubscription.objects.all()
+    print(f"Enviando push a {suscripciones.count()} suscripciones", flush=True)
+
+    vapid_private_key = os.environ.get('VAPID_PRIVATE_KEY', '')
+    if not vapid_private_key:
+        print("ERROR: VAPID_PRIVATE_KEY no configurada", flush=True)
+        return
+
+    print(f"Clave presente: {bool(vapid_private_key)}", flush=True)
+
+    for sub in suscripciones:
+        try:
+            print(f"Intentando enviar push...", flush=True)
+            webpush(
+                subscription_info={
+                    'endpoint': sub.endpoint,
+                    'keys': {
+                        'p256dh': sub.p256dh,
+                        'auth': sub.auth,
+                    }
+                },
+                data=json.dumps({'titulo': titulo, 'mensaje': mensaje}),
+                vapid_private_key=vapid_private_key,
+                vapid_claims={'sub': 'mailto:pao.valija.magica1@gmail.com'},
+                timeout=5
+            )
+            print(f"Push enviado OK", flush=True)
+        except WebPushException as e:
+            print(f"Error WebPush: {e.args}", flush=True)
+            sub.delete()
+        except Exception as e:
+            print(f"Error general: {type(e).__name__}: {e}", flush=True)
+
+
 # ── Formulario público ──────────────────────────────────────
 def consulta_view(request):
     if request.method == 'POST':
         form = ConsultaForm(request.POST)
         if form.is_valid():
             consulta = form.save()
-            enviar_push(
-                titulo='Nueva consulta recibida',
-                mensaje=f'{consulta.nombre_apellido} agendó un turno para el {consulta.fecha_turno.strftime("%d/%m/%Y")} a las {consulta.hora_turno.strftime("%H:%M")}hs'
-            )
+
             mensaje = f"""
 Nueva consulta recibida desde la web:
 
@@ -79,7 +109,52 @@ Presupuesto:  {consulta.presupuesto or '—'}
 Observaciones:{consulta.observaciones or '—'}
             """
 
-            enviar_emails(consulta, mensaje)
+            try:
+                send_mail(
+                    subject=f'Nueva consulta — {consulta.nombre_apellido} | Turno: {consulta.fecha_turno.strftime("%d/%m/%Y")} {consulta.hora_turno.strftime("%H:%M")}hs',
+                    message=mensaje,
+                    from_email=settings.DEFAULT_FROM_EMAIL,
+                    recipient_list=[settings.EMAIL_DESTINO],
+                    fail_silently=False,
+                )
+            except Exception as e:
+                print(f"Error al enviar correo al admin: {e}", flush=True)
+
+            try:
+                send_mail(
+                    subject='¡Tu consulta fue recibida! ✨ Paola Ripa - Agente Oficial Disney & Universal',
+                    message=f"""
+Hola {consulta.nombre_apellido}!
+
+¡Gracias por contactarme! Recibí tu consulta y estoy muy feliz de poder acompañarte en esta aventura mágica.
+
+Tu turno está confirmado para:
+
+- Día: {DIAS_ES[consulta.fecha_turno.weekday()]} {consulta.fecha_turno.strftime('%d/%m/%Y')}
+- Horario: {consulta.hora_turno.strftime('%H:%M')}hs
+
+En esa reunión vamos a repasar todos los detalles de tu viaje y armar el presupuesto ideal para vos.
+
+Si necesitás reprogramar o tenés alguna consulta antes de la reunión, escribime por WhatsApp.
+
+¡Nos vemos pronto!
+Paola Ripa
+Agente Oficial Disney & Universal
+                    """,
+                    from_email=settings.DEFAULT_FROM_EMAIL,
+                    recipient_list=[consulta.email],
+                    fail_silently=False,
+                )
+            except Exception as e:
+                print(f"Error al enviar correo al cliente: {e}", flush=True)
+
+            try:
+                enviar_push(
+                    titulo='Nueva consulta recibida',
+                    mensaje=f'{consulta.nombre_apellido} agendó un turno para el {consulta.fecha_turno.strftime("%d/%m/%Y")} a las {consulta.hora_turno.strftime("%H:%M")}hs'
+                )
+            except Exception as e:
+                print(f"Error push: {e}", flush=True)
 
             return redirect('consulta_exitosa')
     else:
@@ -92,7 +167,6 @@ def consulta_exitosa(request):
 
 
 # ── Login / Logout ──────────────────────────────────────────
-
 def panel_login(request):
     error = None
     if request.method == 'POST':
@@ -140,13 +214,11 @@ def panel(request):
     ]
     dias = [str(i) for i in range(1, 32)]
 
-    # Marcamos selected desde Python
     meses_opts = [{'val': v, 'nom': n, 'sel': v == mes} for v, n in meses]
     dias_opts = [{'val': d, 'sel': d == dia} for d in dias]
     destinos_opts = [{'val': v, 'nom': n, 'sel': v == destino} for v, n in Consulta.DESTINO_CHOICES]
     etiquetas_opts = [{'val': v, 'nom': n, 'sel': v == etiqueta} for v, n in Consulta.ETIQUETA_CHOICES]
 
-    # Para los selects de etiqueta dentro de cada consulta
     for c in consultas:
         c.etiquetas_opts = [{'val': v, 'nom': n, 'sel': v == (c.etiqueta or '')} for v, n in Consulta.ETIQUETA_CHOICES]
 
@@ -191,7 +263,8 @@ def panel_borrar(request, pk):
         return redirect('panel')
     return render(request, 'reservas/confirmar_borrar.html', {'consulta': consulta})
 
-# -─ Cambiar etiqueta ─────────────────────────────────────────
+
+# ── Cambiar etiqueta ─────────────────────────────────────────
 @login_required(login_url='panel_login')
 def panel_etiqueta(request, pk):
     consulta = get_object_or_404(Consulta, pk=pk)
@@ -199,6 +272,7 @@ def panel_etiqueta(request, pk):
         consulta.etiqueta = request.POST.get('etiqueta') or None
         consulta.save()
     return redirect(request.POST.get('next', 'panel'))
+
 
 @csrf_exempt
 def guardar_suscripcion(request):
@@ -216,38 +290,6 @@ def guardar_suscripcion(request):
     return JsonResponse({'ok': False})
 
 
-def enviar_push(titulo, mensaje):
-    suscripciones = PushSubscription.objects.all()
-    print(f"Enviando push a {suscripciones.count()} suscripciones", flush=True)
-
-    vapid_private_key = os.environ.get('VAPID_PRIVATE_KEY', '')
-    if not vapid_private_key:
-        print("ERROR: VAPID_PRIVATE_KEY no configurada", flush=True)
-        return
-
-    print(f"Clave presente: {bool(vapid_private_key)}", flush=True)
-
-    for sub in suscripciones:
-        try:
-            print(f"Intentando enviar push...", flush=True)
-            webpush(
-                subscription_info={
-                    'endpoint': sub.endpoint,
-                    'keys': {
-                        'p256dh': sub.p256dh,
-                        'auth': sub.auth,
-                    }
-                },
-                data=json.dumps({'titulo': titulo, 'mensaje': mensaje}),
-                vapid_private_key=vapid_private_key,
-                vapid_claims={'sub': 'mailto:pao.valija.magica1@gmail.com'}
-            )
-            print(f"Push enviado OK", flush=True)
-        except WebPushException as e:
-            print(f"Error WebPush: {e.args}", flush=True)
-        except Exception as e:
-            print(f"Error general: {type(e).__name__}: {e}", flush=True)
-
 def service_worker(request):
     content = """
 self.addEventListener('push', function(event) {
@@ -261,9 +303,8 @@ self.addEventListener('push', function(event) {
 """
     return HttpResponse(content, content_type='application/javascript')
 
-# notificaciones iphone 
+
 def manifest(request):
-    import json
     data = {
         "name": "Paovalijamagica Panel",
         "short_name": "Panel Pao",
