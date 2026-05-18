@@ -256,21 +256,15 @@ def guardar_suscripcion(request):
 
 
 def enviar_push(titulo, mensaje):
-    import base64
     suscripciones = PushSubscription.objects.all()
     print(f"Enviando push a {suscripciones.count()} suscripciones", flush=True)
 
-    vapid_private_key_b64 = os.environ.get('VAPID_PRIVATE_KEY', '')
-    if not vapid_private_key_b64:
+    vapid_private_key = os.environ.get('VAPID_PRIVATE_KEY', '')
+    if not vapid_private_key:
         print("ERROR: VAPID_PRIVATE_KEY no configurada", flush=True)
         return
 
-    try:
-        vapid_private_key = base64.b64decode(vapid_private_key_b64).decode('utf-8')
-        print(f"Clave decodificada OK, primeros 20: {vapid_private_key[:20]}", flush=True)
-    except Exception as e:
-        print(f"Error decodificando clave: {e}", flush=True)
-        return
+    print(f"Clave presente: {bool(vapid_private_key)}", flush=True)
 
     for sub in suscripciones:
         try:
